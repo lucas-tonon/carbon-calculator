@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import InputAdornment from '@mui/material/InputAdornment';
-import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -14,8 +13,15 @@ import { sanitizeFloatInput } from './utils';
 import { calculateHeatingEmissions } from '../api';
 
 const HeatingForm = ({ parameters, setParameters, fuelOptions }) => {
-  const [gallons, setGallons] = useState();
-  const [selectedFuelOption, setSelectedFuelOption] = useState();
+  const [gallons, setGallons] = useState(parameters.heating.gallons);
+  const [selectedFuelOption, setSelectedFuelOption] = useState(parameters.heating.fuelOption || '');
+
+  useEffect(() => {
+    if (Object.keys(parameters.heating).length) return;
+
+    setGallons('');
+    setSelectedFuelOption('');
+  }, [parameters.heating]);
 
   useEffect(() => {
     const currentEmissions = parameters.emissions;
@@ -59,12 +65,14 @@ const HeatingForm = ({ parameters, setParameters, fuelOptions }) => {
       </FormControl>
 
       <FormControl>
-        <InputLabel>Heating Fuel Type</InputLabel>
         <Select
-          label='Heating Fuel Type'
+          displayEmpty
           onChange={handleSelectedFuelOptionChange}
           value={selectedFuelOption}
         >
+          <MenuItem key='empty-fuel' value='' disabled>
+            <Typography sx={{ color: 'gray' }}>Heating Fuel</Typography>
+          </MenuItem>
           {
             fuelOptions && Object.entries(fuelOptions).map(entry =>
               <MenuItem key={entry[1]} value={entry[1]}>{entry[0]}</MenuItem>

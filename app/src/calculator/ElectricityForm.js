@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import InputAdornment from '@mui/material/InputAdornment';
-import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -14,8 +13,15 @@ import { sanitizeFloatInput } from './utils';
 import { calculateElectricityEmissions } from '../api';
 
 const ElectricityForm = ({ parameters, setParameters, gridOptions }) => {
-  const [consumption, setConsumption] = useState();
-  const [selectedGridOption, setSelectedGridOption] = useState();
+  const [consumption, setConsumption] = useState(parameters.electricity.consumption);
+  const [selectedGridOption, setSelectedGridOption] = useState(parameters.electricity.gridOption || '');
+
+  useEffect(() => {
+    if (Object.keys(parameters.electricity).length) return;
+
+    setConsumption('');
+    setSelectedGridOption('');
+  }, [parameters.electricity]);
 
   useEffect(() => {
     const currentEmissions = parameters.emissions;
@@ -58,24 +64,22 @@ const ElectricityForm = ({ parameters, setParameters, gridOptions }) => {
         />
       </FormControl>
 
-      {
-        Object.keys(gridOptions).length &&
-          <FormControl>
-            <InputLabel>Grid Location</InputLabel>
-            <Select
-              label='Grid Location'
-              onChange={handleSelectedGridOptionChange}
-              value={selectedGridOption}
-            >
-              {
-                gridOptions && Object.entries(gridOptions).map(entry =>
-                  <MenuItem key={entry[1]} value={entry[1]}>{entry[0]}</MenuItem>
-                )
-              }
-            </Select>
-          </FormControl>
-      }
-
+      <FormControl>
+        <Select
+          displayEmpty
+          onChange={handleSelectedGridOptionChange}
+          value={selectedGridOption}
+        >
+          <MenuItem key='empty-grid-location' value='' disabled>
+            <Typography sx={{ color: 'gray' }}>Grid Location</Typography>
+          </MenuItem>
+          {
+            gridOptions && Object.entries(gridOptions).map(entry =>
+              <MenuItem key={entry[1]} value={entry[1]}>{entry[0]}</MenuItem>
+            )
+          }
+        </Select>
+      </FormControl>
     </Box>
   );
 };

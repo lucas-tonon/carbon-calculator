@@ -58,18 +58,6 @@ const CalculatorCard = ({ parameters, setParameters }) => {
     navigate('/report');
   };
 
-  const calculateEmissionsTotal = () => {
-    const emissions = parameters.emissions;
-
-    const electricityEmissions = emissions.electricity || 0;
-    const heatingEmissions = emissions.heating || 0;
-    const transportationEmissions = emissions.transportation || 0;
-
-    const total = electricityEmissions + heatingEmissions + transportationEmissions;
-
-    return total.toFixed(2);
-  };
-
   return (
     <Box width='50%'>
       <Card>
@@ -110,13 +98,9 @@ const CalculatorCard = ({ parameters, setParameters }) => {
         </CardContent>
 
         <CardActions>
-          <Box display='flex' width='100%' justifyContent='space-between' mh={1}>
-            <Typography>{`Total Emissions: ${calculateEmissionsTotal()} kg of CO2`}</Typography>
-
-            <Box sx={{ '& > :not(style)': { mx: 1 } }}>
-              <Button variant='contained' onClick={handleReset}>Reset</Button>
-              <Button variant='contained' onClick={handleNavigationToReportPage}>Generate Report</Button>
-            </Box>
+          <Box display='flex' width='100%' justifyContent='flex-end' sx={{ '& > :not(style)': { mx: 1, my: 2 } }}>
+            <Button variant='contained' onClick={handleReset}>Reset</Button>
+            <Button variant='contained' onClick={handleNavigationToReportPage}>Generate Report</Button>
           </Box>
         </CardActions>
       </Card>

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import InputAdornment from '@mui/material/InputAdornment';
-import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -13,10 +12,19 @@ import { sanitizeFloatInput } from './utils';
 import { calculateTransportationEmissions } from '../api';
 
 const TransportationForm = ({ parameters, setParameters, combustionOptions, vehicleYearOptions }) => {
-  const [miles, setMiles] = useState();
-  const [gasMileage, setGasMileage] = useState();
-  const [selectedVehicleYearOption, setSelectedVehicleYearOption] = useState();
-  const [selectedCombustionOption, setSelectedCombustionOption] = useState();
+  const [miles, setMiles] = useState(parameters.transportation.miles);
+  const [gasMileage, setGasMileage] = useState(parameters.transportation.gasMileage);
+  const [selectedVehicleYearOption, setSelectedVehicleYearOption] = useState(parameters.transportation.vehicleYearOption || '');
+  const [selectedCombustionOption, setSelectedCombustionOption] = useState(parameters.transportation.combustionOption || '');
+
+  useEffect(() => {
+    if (Object.keys(parameters.transportation).length) return;
+
+    setMiles('');
+    setGasMileage('');
+    setSelectedVehicleYearOption('');
+    setSelectedCombustionOption('');
+  }, [parameters.transportation]);
 
   useEffect(() => {
     const currentEmissions = parameters.emissions;
@@ -83,9 +91,8 @@ const TransportationForm = ({ parameters, setParameters, combustionOptions, vehi
       </FormControl>
 
       <FormControl>
-        <InputLabel>Vehicle Year</InputLabel>
         <Select
-          label='Vehicle Year'
+          displayEmpty
           onChange={handleSelectedVehicleYearOptionChange}
           value={selectedVehicleYearOption}
           MenuProps={{
@@ -96,6 +103,9 @@ const TransportationForm = ({ parameters, setParameters, combustionOptions, vehi
             },
           }}
         >
+          <MenuItem key='empty-vehicle-year' value='' disabled>
+            <Typography sx={{ color: 'gray' }}>Vehicle Year</Typography>
+          </MenuItem>
           {
             vehicleYearOptions && Object.entries(vehicleYearOptions).sort((a, b) => a[1] - b[1]).map(entry =>
               <MenuItem key={entry[1]} value={entry[1]}>{entry[0]}</MenuItem>
@@ -105,9 +115,8 @@ const TransportationForm = ({ parameters, setParameters, combustionOptions, vehi
       </FormControl>
 
       <FormControl>
-        <InputLabel>Combustion Fuel</InputLabel>
         <Select
-          label='Combustion Fuel'
+          displayEmpty
           onChange={handleSelectedCombustionOptionChange}
           value={selectedCombustionOption}
           MenuProps={{
@@ -118,6 +127,9 @@ const TransportationForm = ({ parameters, setParameters, combustionOptions, vehi
             },
           }}
         >
+          <MenuItem key='empty-combustion' value='' disabled>
+            <Typography sx={{ color: 'gray' }}>Combustion Fuel</Typography>
+          </MenuItem>
           {
             combustionOptions && Object.entries(combustionOptions).map(entry =>
               <MenuItem key={entry[1]} value={entry[1]}>{entry[0]}</MenuItem>
