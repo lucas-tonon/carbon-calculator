@@ -11,7 +11,7 @@ const Home = ({ parameters, setParameters }) => {
   return (
     <>
       <h1>Home</h1>
-      <ForwardButton nextUrl="/household" />
+      <ForwardButton nextUrl="/calculator" />
     </>
   );
 };

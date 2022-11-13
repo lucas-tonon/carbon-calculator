@@ -2,30 +2,28 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Home from './home';
-import HouseholdForm from './household';
-import TransportationForm from './transportation';
+import Calculator from './calculator';
 import Report from './report';
 
-function App() {
-  const [carbonParameters, setCarbonParameters] = React.useState({});
-  const [data, setData] = React.useState(null);
+export const initialCarbonParameters = {
+  electricity: {},
+  heating: {},
+  transportation: {},
+  emissions: {},
+}
 
-  React.useEffect(() => {
-    fetch("/api")
-      .then((res) => res.json())
-      .then((data) => setData(data.message));
-  }, []);
+const App = () => {
+  const [carbonParameters, setCarbonParameters] = React.useState({...initialCarbonParameters});
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home parameters={carbonParameters} setParameters={setCarbonParameters} />} />
-        <Route path="/household" element={<HouseholdForm parameters={carbonParameters} setParameters={setCarbonParameters} />} />
-        <Route path="/transportation" element={<TransportationForm parameters={carbonParameters} setParameters={setCarbonParameters} />} />
+        <Route path="/calculator" element={<Calculator parameters={carbonParameters} setParameters={setCarbonParameters} />} />
         <Route path="/report" element={<Report parameters={carbonParameters} setParameters={setCarbonParameters} />} />
       </Routes>
     </BrowserRouter>
   );
-}
+};
 
 export default App;
