@@ -4,7 +4,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './home';
 import HouseholdForm from './household';
 import TransportationForm from './transportation';
-import WasteForm from './waste';
 import Report from './report';
 
 function App() {
@@ -23,7 +22,6 @@ function App() {
         <Route path="/" element={<Home parameters={carbonParameters} setParameters={setCarbonParameters} />} />
         <Route path="/household" element={<HouseholdForm parameters={carbonParameters} setParameters={setCarbonParameters} />} />
         <Route path="/transportation" element={<TransportationForm parameters={carbonParameters} setParameters={setCarbonParameters} />} />
-        <Route path="/waste" element={<WasteForm parameters={carbonParameters} setParameters={setCarbonParameters} />} />
         <Route path="/report" element={<Report parameters={carbonParameters} setParameters={setCarbonParameters} />} />
       </Routes>
     </BrowserRouter>
