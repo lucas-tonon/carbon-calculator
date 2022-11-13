@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -11,23 +11,13 @@ import Typography from '@mui/material/Typography';
 
 import { sanitizeFloatInput } from './utils';
 
-const HeatingForm = ({ parameters, setParameters }) => {
-  const [gallons, setGallons] = React.useState();
-  const [selectedFuelOption, setSelectedFuelOption] = React.useState();
-  const [fuelOptions, setFuelOptions] = React.useState({});
+import { calculateHeatingEmissions } from '../api';
 
-  React.useEffect(() => {
-    setGallons(parameters.heating.gallons);
-    setSelectedFuelOption(parameters.heating.fuelOption);
-  }, [parameters]);
+const HeatingForm = ({ parameters, setParameters, fuelOptions }) => {
+  const [gallons, setGallons] = useState();
+  const [selectedFuelOption, setSelectedFuelOption] = useState();
 
-  React.useEffect(() => {
-    fetch('/api/v1/heating/options')
-      .then((res) => res.json())
-      .then((data) => setFuelOptions(data));
-  }, []);
-
-  React.useEffect(() => {
+  useEffect(() => {
     const currentEmissions = parameters.emissions;
 
     if (selectedFuelOption === undefined) {
@@ -35,10 +25,8 @@ const HeatingForm = ({ parameters, setParameters }) => {
       return;
     }
 
-    const gallonsInput = gallons || 0;
-    fetch(`/api/v1/heating/calculate?gallons=${gallonsInput}&type=${selectedFuelOption}`)
-      .then((res) => res.json())
-      .then((data) => setParameters({ ...parameters, emissions: {...currentEmissions, heating: data.totalEmissions }}));
+    calculateHeatingEmissions(gallons, selectedFuelOption)
+        .then((data) => setParameters({ ...parameters, emissions: {...currentEmissions, heating: data.totalEmissions }}));
   }, [gallons, selectedFuelOption]);
 
   const handleSelectedFuelOptionChange = (e) => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
@@ -14,6 +14,13 @@ import ElectricityForm from './ElectricityForm';
 import HeatingForm from './HeatingForm';
 import TransportationForm from './TransportationForm';
 
+import {
+  fetchElectricityGridOptions,
+  fetchHeatingFuelOptions,
+  fetchTransportationFuelOptions,
+  fetchTransportationVehicleYearOptions,
+} from '../api';
+
 import { initialCarbonParameters } from '../App';
 
 export const CATEGORY = {
@@ -24,13 +31,28 @@ export const CATEGORY = {
 
 const CalculatorCard = ({ parameters, setParameters }) => {
   const navigate = useNavigate();
-  const [currentCategory, setCurrentCategory] = React.useState(CATEGORY.ELECTRICITY);
+
+  const [currentCategory, setCurrentCategory] = useState(CATEGORY.ELECTRICITY);
+
+  const [electricityGridOptions, setElectricityGridOptions] = useState({});
+  const [heatingFuelOptions, setHeatingFuelOptions] = useState({});
+  const [transportationFuelOptions, setTransportationFuelOptions] = useState({});
+  const [transportationVehicleYearOptions, setTransportationVehicleYearOptions] = useState({});
+
+  useEffect(() => {
+    fetchElectricityGridOptions().then((data) => setElectricityGridOptions(data));
+    fetchHeatingFuelOptions().then((data) => setHeatingFuelOptions(data));
+    fetchTransportationFuelOptions().then((data) => setTransportationFuelOptions(data));
+    fetchTransportationVehicleYearOptions().then((data) => setTransportationVehicleYearOptions(data));
+  }, []);
 
   const handleTabChange = (e, newValue) => {
     setCurrentCategory(newValue);
   };
 
-  const handleReset = () => setParameters({...initialCarbonParameters});
+  const handleReset = () => {
+    setParameters({...initialCarbonParameters})
+  };
 
   const handleNavigationToReportPage = () => {
     navigate('/report');
@@ -58,11 +80,34 @@ const CalculatorCard = ({ parameters, setParameters }) => {
             <Tab label='Transportation' value={CATEGORY.TRANSPORTATION} />
           </Tabs>
 
-          { currentCategory === CATEGORY.ELECTRICITY && <ElectricityForm parameters={parameters} setParameters={setParameters} /> }
-          { currentCategory === CATEGORY.HEATING && <HeatingForm parameters={parameters} setParameters={setParameters} /> }
-          { currentCategory === CATEGORY.TRANSPORTATION && <TransportationForm parameters={parameters} setParameters={setParameters} /> }
-        </CardContent>
+          {
+            currentCategory === CATEGORY.ELECTRICITY &&
+              <ElectricityForm
+                parameters={parameters}
+                setParameters={setParameters}
+                gridOptions={electricityGridOptions}
+              />
+          }
 
+          {
+            currentCategory === CATEGORY.HEATING &&
+              <HeatingForm
+                parameters={parameters}
+                setParameters={setParameters}
+                fuelOptions={heatingFuelOptions}
+              />
+          }
+
+          {
+            currentCategory === CATEGORY.TRANSPORTATION &&
+              <TransportationForm
+                parameters={parameters}
+                setParameters={setParameters}
+                combustionOptions={transportationFuelOptions}
+                vehicleYearOptions={transportationVehicleYearOptions}
+              />
+          }
+        </CardContent>
 
         <CardActions>
           <Box display='flex' width='100%' justifyContent='space-between' mh={1}>

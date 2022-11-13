@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -10,35 +10,15 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
 import { sanitizeFloatInput } from './utils';
+import { calculateTransportationEmissions } from '../api';
 
-const TransportationForm = ({ parameters, setParameters }) => {
-  const [miles, setMiles] = React.useState();
-  const [gasMileage, setGasMileage] = React.useState();
-  const [selectedVehicleYearOption, setSelectedVehicleYearOption] = React.useState();
-  const [selectedCombustionOption, setSelectedCombustionOption] = React.useState();
-  const [combustionOptions, setCombustionOptions] = React.useState({});
-  const [vehicleYearOptions, setVehicleYearOptions] = React.useState({});
+const TransportationForm = ({ parameters, setParameters, combustionOptions, vehicleYearOptions }) => {
+  const [miles, setMiles] = useState();
+  const [gasMileage, setGasMileage] = useState();
+  const [selectedVehicleYearOption, setSelectedVehicleYearOption] = useState();
+  const [selectedCombustionOption, setSelectedCombustionOption] = useState();
 
-  React.useEffect(() => {
-    setMiles(parameters.transportation.miles);
-    setGasMileage(parameters.transportation.gasMileage);
-    setSelectedVehicleYearOption(parameters.transportation.vehicleYearOption);
-    setSelectedCombustionOption(parameters.transportation.combustionOption);
-  }, [parameters]);
-
-  React.useEffect(() => {
-    fetch('/api/v1/transportation/combustion-options')
-      .then((res) => res.json())
-      .then((data) => setCombustionOptions(data));
-  }, []);
-
-  React.useEffect(() => {
-    fetch('/api/v1/transportation/vehicle-year-options')
-      .then((res) => res.json())
-      .then((data) => setVehicleYearOptions(data));
-  }, []);
-
-  React.useEffect(() => {
+  useEffect(() => {
     const currentEmissions = parameters.emissions;
 
     if (selectedCombustionOption === undefined) {
@@ -46,12 +26,8 @@ const TransportationForm = ({ parameters, setParameters }) => {
       return;
     }
 
-    const milesInput = miles || 0;
-    const gasMileageInput = gasMileage || 0;
-
-    fetch(`/api/v1/transportation/calculate?miles=${milesInput}&gasMileage=${gasMileageInput}&vehicleYear=${selectedVehicleYearOption}&combustion=${selectedCombustionOption}`)
-      .then((res) => res.json())
-      .then((data) => setParameters({ ...parameters, emissions: {...currentEmissions, transportation: data.totalEmissions }}));
+    calculateTransportationEmissions(miles, gasMileage, selectedVehicleYearOption, selectedCombustionOption)
+        .then((data) => setParameters({ ...parameters, emissions: {...currentEmissions, transportation: data.totalEmissions }}));
   }, [miles, gasMileage, selectedVehicleYearOption, selectedCombustionOption]);
 
   const handleSelectedCombustionOptionChange = (e) => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -11,18 +11,13 @@ import Typography from '@mui/material/Typography';
 
 import { sanitizeFloatInput } from './utils';
 
-const ElectricityForm = ({ parameters, setParameters }) => {
-  const [consumption, setConsumption] = React.useState();
-  const [selectedGridOption, setSelectedGridOption] = React.useState();
-  const [gridOptions, setGridOptions] = React.useState({});
+import { calculateElectricityEmissions } from '../api';
 
-  React.useEffect(() => {
-    fetch('/api/v1/electricity/options')
-      .then((res) => res.json())
-      .then((data) => setGridOptions(data));
-  }, [gridOptions]);
+const ElectricityForm = ({ parameters, setParameters, gridOptions }) => {
+  const [consumption, setConsumption] = useState();
+  const [selectedGridOption, setSelectedGridOption] = useState();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const currentEmissions = parameters.emissions;
 
     if (selectedGridOption === undefined) {
@@ -30,10 +25,8 @@ const ElectricityForm = ({ parameters, setParameters }) => {
       return;
     }
 
-    const consumptionInput = consumption || 0;
-    fetch(`/api/v1/electricity/calculate?consumption=${consumptionInput}&grid=${selectedGridOption}`)
-      .then((res) => res.json())
-      .then((data) => setParameters({ ...parameters, emissions: { ...currentEmissions, electricity: data.totalEmissions }}));
+    calculateElectricityEmissions(consumption, selectedGridOption)
+        .then((data) => setParameters({ ...parameters, emissions: { ...currentEmissions, electricity: data.totalEmissions }}));
   }, [consumption, selectedGridOption]);
 
   const handleSelectedGridOptionChange = (e) => {
@@ -65,20 +58,24 @@ const ElectricityForm = ({ parameters, setParameters }) => {
         />
       </FormControl>
 
-      <FormControl>
-        <InputLabel>Grid Location</InputLabel>
-        <Select
-          label='Grid Location'
-          onChange={handleSelectedGridOptionChange}
-          value={selectedGridOption}
-        >
-          {
-            gridOptions && Object.entries(gridOptions).map(entry =>
-              <MenuItem key={entry[1]} value={entry[1]}>{entry[0]}</MenuItem>
-            )
-          }
-        </Select>
-      </FormControl>
+      {
+        Object.keys(gridOptions).length &&
+          <FormControl>
+            <InputLabel>Grid Location</InputLabel>
+            <Select
+              label='Grid Location'
+              onChange={handleSelectedGridOptionChange}
+              value={selectedGridOption}
+            >
+              {
+                gridOptions && Object.entries(gridOptions).map(entry =>
+                  <MenuItem key={entry[1]} value={entry[1]}>{entry[0]}</MenuItem>
+                )
+              }
+            </Select>
+          </FormControl>
+      }
+
     </Box>
   );
 };
