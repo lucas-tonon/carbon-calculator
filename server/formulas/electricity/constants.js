@@ -1,7 +1,7 @@
 const POUND_PER_MWH_TO_KILOGRAM_PER_KWH_MULTIPLIER = 0.000453592;
 
 const GRID_OPTIONS = {
-  'California': 'CAMX',
+  'California (CAMX)': 'CAMX',
 };
 
 // lb / MWh
