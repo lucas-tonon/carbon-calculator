@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import Home from './home';
+import Box from '@mui/material/Box';
+
 import Calculator from './calculator';
 import Report from './report';
+import AppBar from "./components/AppBar";
 
 export const initialCarbonParameters = {
   electricity: {},
@@ -16,13 +18,15 @@ const App = () => {
   const [carbonParameters, setCarbonParameters] = useState({...initialCarbonParameters});
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home parameters={carbonParameters} setParameters={setCarbonParameters} />} />
-        <Route path="/calculator" element={<Calculator parameters={carbonParameters} setParameters={setCarbonParameters} />} />
-        <Route path="/report" element={<Report parameters={carbonParameters} setParameters={setCarbonParameters} />} />
-      </Routes>
-    </BrowserRouter>
+    <Box>
+      <AppBar parameters={carbonParameters} />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Calculator parameters={carbonParameters} setParameters={setCarbonParameters} />} />
+          <Route path="/report" element={<Report />} />
+        </Routes>
+      </BrowserRouter>
+    </Box>
   );
 };
 
