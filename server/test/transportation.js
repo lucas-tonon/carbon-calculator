@@ -3,23 +3,38 @@ const chaiHttp = require('chai-http');
 
 const server = require('../index');
 
-const { MOBILE_COMBUSTION_OPTIONS } = require('../formulas/transportation/constants');
+const { MOBILE_COMBUSTION_OPTIONS, VEHICLE_YEAR_OPTIONS } = require('../formulas/transportation/constants');
 
 chai.should();
 chai.use(chaiHttp);
 
 describe('Transportation APIs', () => {
 
-  describe('/api/v1/transportation/options', () => {
+  describe('/api/v1/transportation/combustion-options', () => {
     it('should return all valid transportation fuel options', (done) => {
       chai.request(server)
-          .get('/api/v1/transportation/options')
+          .get('/api/v1/transportation/combustion-options')
           .end((err, res) => {
               if (err) throw err;
 
               res.should.have.status(200);
               res.body.should.be.a('object');
               res.body.should.be.eql(MOBILE_COMBUSTION_OPTIONS);
+            done();
+          });
+    });
+  });
+
+  describe('/api/v1/transportation/vehicle-year-options', () => {
+    it('should return all valid transportation vehicle year options', (done) => {
+      chai.request(server)
+          .get('/api/v1/transportation/vehicle-year-options')
+          .end((err, res) => {
+              if (err) throw err;
+
+              res.should.have.status(200);
+              res.body.should.be.a('object');
+              res.body.should.be.eql(VEHICLE_YEAR_OPTIONS);
             done();
           });
     });

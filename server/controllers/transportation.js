@@ -1,9 +1,11 @@
 const { validationResult } = require('express-validator');
 
 const { calculateTotalMobileCombustionEmission } = require('../formulas/transportation');
-const { MOBILE_COMBUSTION_OPTIONS } = require('../formulas/transportation/constants');
+const { MOBILE_COMBUSTION_OPTIONS, VEHICLE_YEAR_OPTIONS } = require('../formulas/transportation/constants');
 
 const fetchTransportationFuelOptions = (req, res, next) => res.send(MOBILE_COMBUSTION_OPTIONS);
+
+const fetchTransportationVehicleYearOptions = (req, res, next) => res.send(VEHICLE_YEAR_OPTIONS);
 
 const calculateTotalEmission = (req, res, next) => {
   const validationsErrors = validationResult(req).errors;
@@ -20,5 +22,6 @@ const calculateTotalEmission = (req, res, next) => {
 
 module.exports = {
   fetchTransportationFuelOptions,
+  fetchTransportationVehicleYearOptions,
   calculateTotalEmission,
 };
