@@ -23,7 +23,7 @@ const EPAEmissionFactorsLink = () =>
   </Link>
 
 const Description = () =>
-  <Box mx={2}>
+  <Box mx={2} data-testid='description'>
     <Typography>
       Many things we do on a daily basis generate emissions that can contribute to the greenhouse effect.
       Given our current emergency regarding the climate crisis it may be interesting to do an estimate of how much carbon we emit in our

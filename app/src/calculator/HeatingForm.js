@@ -50,7 +50,7 @@ const HeatingForm = ({ parameters, setParameters, fuelOptions }) => {
   };
 
   return (
-    <Box display='flex' flexDirection='column'>
+    <Box display='flex' flexDirection='column' data-testid='heating-form'>
       <Typography mx={2} mt={2}>
         The calculation for heating fuel emissions uses the average number of gallons consumed heating a household per month,
         using it we can calculate the total amount of CO2, N2O, and CH4 emitted in a year.
@@ -68,7 +68,7 @@ const HeatingForm = ({ parameters, setParameters, fuelOptions }) => {
           label='Heating Consumption'
           value={gallons}
           onChange={handleGallonsChange}
-          inputProps={{ maxLength: 7 }}
+          inputProps={{ maxLength: 7, 'data-testid': 'gallons-input' }}
           InputLabelProps={{
             style: { color: grey[500] }
           }}
@@ -79,6 +79,7 @@ const HeatingForm = ({ parameters, setParameters, fuelOptions }) => {
 
         <Select
           displayEmpty
+          inputProps={{ 'data-testid': 'fuel-option-select' }}
           onChange={handleSelectedFuelOptionChange}
           value={selectedFuelOption}
         >

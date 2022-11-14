@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 
 const PageTitle = ({ children }) =>
   <Box display='flex' justifyContent='center' my={2}>
-    <Typography variant='h4'>{children}</Typography>
+    <Typography variant='h4' data-testid='page-title'>{children}</Typography>
   </Box>
 
 export default PageTitle;

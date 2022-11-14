@@ -50,7 +50,7 @@ const ElectricityForm = ({ parameters, setParameters, gridOptions }) => {
   };
 
   return (
-    <Box display='flex' flexDirection='column'>
+    <Box display='flex' flexDirection='column' data-testid='electricity-form'>
       <Typography mx={2} mt={2}>
         The calculation for this step takes into account the average emission per electricity grid, calculating the total amount
         of CO2, N2O, and CH4 emitted.
@@ -68,7 +68,7 @@ const ElectricityForm = ({ parameters, setParameters, gridOptions }) => {
           label='Electricity Consumption'
           value={consumption}
           onChange={handleConsumptionChange}
-          inputProps={{ maxLength: 13 }}
+          inputProps={{ maxLength: 13, 'data-testid': 'consumption-input' }}
           InputLabelProps={{
             style: { color: grey[500] }
           }}
@@ -81,6 +81,7 @@ const ElectricityForm = ({ parameters, setParameters, gridOptions }) => {
           displayEmpty
           onChange={handleSelectedGridOptionChange}
           value={selectedGridOption}
+          inputProps={{ 'data-testid': 'grid-location-select' }}
         >
           <MenuItem key='empty-grid-location' value='' disabled>
             <Typography sx={{ color: 'gray' }}>Grid Location</Typography>

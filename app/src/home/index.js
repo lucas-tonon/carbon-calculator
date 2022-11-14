@@ -25,7 +25,7 @@ const Home = () => {
 
       <CardActionsContainer>
         <Box display='flex' width='100%' m={1} justifyContent='flex-end'>
-          <Button variant='contained' onClick={handleNavigateToCalculator}>Start</Button>
+          <Button variant='contained' onClick={handleNavigateToCalculator} data-testid='navigate-calculator'>Start</Button>
         </Box>
       </CardActionsContainer>
     </PageContainer>

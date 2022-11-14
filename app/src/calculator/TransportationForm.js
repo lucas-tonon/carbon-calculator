@@ -64,7 +64,7 @@ const TransportationForm = ({ parameters, setParameters, combustionOptions, vehi
   };
 
   return (
-    <Box display='flex' flexDirection='column'>
+    <Box display='flex' flexDirection='column' data-testid='transportation-form'>
       <Typography mx={2} mt={2}>
         The calculation for transportation emissions assumes a passenger vehicle, and uses the information of how many miles were driven in a given
         year, miles per gallon, vehicle year, and fuel type to calculate total amount of CO2, N2O, and CH4 emitted in a year.
@@ -87,7 +87,7 @@ const TransportationForm = ({ parameters, setParameters, combustionOptions, vehi
           label='Miles Driven'
           value={miles}
           onChange={handleMilesChange}
-          inputProps={{ maxLength: 7 }}
+          inputProps={{ maxLength: 7, 'data-testid': 'miles-input' }}
           InputLabelProps={{
             style: { color: grey[500] }
           }}
@@ -100,7 +100,7 @@ const TransportationForm = ({ parameters, setParameters, combustionOptions, vehi
           label='Average Gas Mileage'
           value={gasMileage}
           onChange={handleGasMileageChange}
-          inputProps={{ maxLength: 3 }}
+          inputProps={{ maxLength: 3, 'data-testid': 'gas-mileage-input' }}
           InputLabelProps={{
             style: { color: grey[500] }
           }}
@@ -113,6 +113,7 @@ const TransportationForm = ({ parameters, setParameters, combustionOptions, vehi
           displayEmpty
           onChange={handleSelectedVehicleYearOptionChange}
           value={selectedVehicleYearOption}
+          inputProps={{ 'data-testid': 'vehicle-year-select' }}
           MenuProps={{
             PaperProps: {
               style: {
@@ -135,6 +136,7 @@ const TransportationForm = ({ parameters, setParameters, combustionOptions, vehi
           displayEmpty
           onChange={handleSelectedCombustionOptionChange}
           value={selectedCombustionOption}
+          inputProps={{ 'data-testid': 'combustion-fuel-select' }}
           MenuProps={{
             PaperProps: {
               style: {

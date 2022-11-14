@@ -104,11 +104,33 @@ const Calculator = ({ parameters, setParameters }) => {
       </CardContentContainer>
 
       <CardActionsContainer>
-        <Button sx={{ m: 1 }} variant='contained' color='secondary' onClick={handleNavigateBack}>Back</Button>
+        <Button
+          sx={{ m: 1 }}
+          variant='contained'
+          color='secondary'
+          onClick={handleNavigateBack}
+          data-testid='navigate-back'
+        >
+          Back
+        </Button>
 
         <Box display='flex' justifyContent='flex-end' width='100%' m={1}>
-          <Button sx={{ mr: 1 }} variant='contained' onClick={handleReset}>Reset</Button>
-          <Button variant='contained' onClick={handleNavigationToReportPage}>Generate Report</Button>
+          <Button
+            sx={{ mr: 1 }}
+            variant='contained'
+            onClick={handleReset}
+            data-testid='reset'
+          >
+            Reset
+          </Button>
+
+          <Button
+            variant='contained'
+            onClick={handleNavigationToReportPage}
+            data-testid='generate-report'
+          >
+            Generate Report
+          </Button>
         </Box>
       </CardActionsContainer>
     </PageContainer>
