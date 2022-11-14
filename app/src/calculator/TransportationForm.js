@@ -2,18 +2,19 @@ import React, { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 
+import { grey } from '@mui/material/colors';
+
 import { sanitizeFloatInput } from './utils';
 import { calculateTransportationEmissions } from '../api';
 
 const TransportationForm = ({ parameters, setParameters, combustionOptions, vehicleYearOptions }) => {
-  const [miles, setMiles] = useState(parameters.transportation.miles);
-  const [gasMileage, setGasMileage] = useState(parameters.transportation.gasMileage);
+  const [miles, setMiles] = useState(parameters.transportation.miles || '');
+  const [gasMileage, setGasMileage] = useState(parameters.transportation.gasMileage || '');
   const [selectedVehicleYearOption, setSelectedVehicleYearOption] = useState(parameters.transportation.vehicleYearOption || '');
   const [selectedCombustionOption, setSelectedCombustionOption] = useState(parameters.transportation.combustionOption || '');
 
@@ -27,9 +28,11 @@ const TransportationForm = ({ parameters, setParameters, combustionOptions, vehi
   }, [parameters.transportation]);
 
   useEffect(() => {
+    if (miles === '' || gasMileage === '' || selectedVehicleYearOption === '' || selectedCombustionOption === '') return;
+
     const currentEmissions = parameters.emissions;
 
-    if (selectedCombustionOption === undefined) {
+    if (!selectedCombustionOption || !selectedVehicleYearOption) {
       setParameters({ ...parameters, emissions: {...currentEmissions, transportation: 0 }});
       return;
     }
@@ -49,48 +52,63 @@ const TransportationForm = ({ parameters, setParameters, combustionOptions, vehi
   };
 
   const handleMilesChange = (e) => {
-    const sanitizedInput = sanitizeFloatInput(e.target.value);
+    const sanitizedInput = sanitizeFloatInput(e.target.value) || 0;
     setMiles(sanitizedInput);
     setParameters({ ...parameters, transportation: { ...parameters.transportation, miles: sanitizedInput } })
   };
 
   const handleGasMileageChange = (e) => {
-    const sanitizedInput = sanitizeFloatInput(e.target.value);
+    const sanitizedInput = sanitizeFloatInput(e.target.value) || 0;
     setGasMileage(sanitizedInput);
     setParameters({ ...parameters, transportation: { ...parameters.transportation, gasMileage: sanitizedInput } })
   };
 
   return (
-    <Box minHeight='450px' sx={{ '& > :not(style)': { m: 1 } }} display='flex' flexDirection='column'>
-      <Typography>
-        Enter information about your drive history for the past year.
+    <Box display='flex' flexDirection='column'>
+      <Typography mx={2} mt={2}>
+        The calculation for transportation emissions assumes a passenger vehicle, and uses the information of how many miles were driven in a given
+        year, miles per gallon, vehicle year, and fuel type to calculate total amount of CO2, N2O, and CH4 emitted in a year.
+      </Typography>
+      <Typography mx={2}>
+        We convert the N2O and CH4 emissions to COe, i.e., the carbon dioxide equivalent.
       </Typography>
 
-      <FormControl>
+      <Typography mx={2} mt={1}>
+        If a vehicle manufacturing year is outside the range provided, the calculator will assume the closest reference value.
+        For example, if a vehicle was manufactured in 1980 and the minimum option is 1988, we will use the emission factor as if it was manufactured in 1988.
+      </Typography>
+
+      <Typography mx={2} mt={1}>
+        Please insert how many miles you have driven, gas mileage, vehicle year, and fuel used.
+      </Typography>
+
+      <Box display='flex' flexDirection='column' mx={2} mt={1} sx={{ '& > :not(style)': { mb: 2 } }}>
         <TextField
           label='Miles Driven'
           value={miles}
           onChange={handleMilesChange}
           inputProps={{ maxLength: 7 }}
+          InputLabelProps={{
+            style: { color: grey[500] }
+          }}
           InputProps={{
             endAdornment: <InputAdornment position="end">miles</InputAdornment>,
           }}
         />
-      </FormControl>
 
-      <FormControl>
         <TextField
           label='Average Gas Mileage'
           value={gasMileage}
           onChange={handleGasMileageChange}
           inputProps={{ maxLength: 3 }}
+          InputLabelProps={{
+            style: { color: grey[500] }
+          }}
           InputProps={{
             endAdornment: <InputAdornment position="end">miles per gallon</InputAdornment>,
           }}
         />
-      </FormControl>
 
-      <FormControl>
         <Select
           displayEmpty
           onChange={handleSelectedVehicleYearOptionChange}
@@ -112,9 +130,7 @@ const TransportationForm = ({ parameters, setParameters, combustionOptions, vehi
             )
           }
         </Select>
-      </FormControl>
 
-      <FormControl>
         <Select
           displayEmpty
           onChange={handleSelectedCombustionOptionChange}
@@ -136,7 +152,7 @@ const TransportationForm = ({ parameters, setParameters, combustionOptions, vehi
             )
           }
         </Select>
-      </FormControl>
+      </Box>
     </Box>
   );
 };

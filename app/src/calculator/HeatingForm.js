@@ -2,18 +2,19 @@ import React, { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+
+import { grey } from '@mui/material/colors';
 
 import { sanitizeFloatInput } from './utils';
 
 import { calculateHeatingEmissions } from '../api';
 
 const HeatingForm = ({ parameters, setParameters, fuelOptions }) => {
-  const [gallons, setGallons] = useState(parameters.heating.gallons);
+  const [gallons, setGallons] = useState(parameters.heating.gallons || '');
   const [selectedFuelOption, setSelectedFuelOption] = useState(parameters.heating.fuelOption || '');
 
   useEffect(() => {
@@ -24,9 +25,11 @@ const HeatingForm = ({ parameters, setParameters, fuelOptions }) => {
   }, [parameters.heating]);
 
   useEffect(() => {
+    if (gallons === '' || selectedFuelOption === '') return;
+
     const currentEmissions = parameters.emissions;
 
-    if (selectedFuelOption === undefined) {
+    if (!selectedFuelOption) {
       setParameters({ ...parameters, emissions: { ...currentEmissions, heating: 0 }});
       return;
     }
@@ -41,30 +44,39 @@ const HeatingForm = ({ parameters, setParameters, fuelOptions }) => {
   };
 
   const handleGallonsChange = (e) => {
-    const sanitizedInput = sanitizeFloatInput(e.target.value);
+    const sanitizedInput = sanitizeFloatInput(e.target.value) || 0;
     setGallons(sanitizedInput);
     setParameters({ ...parameters, heating: { ...parameters.heating, gallons: sanitizedInput } })
   };
 
   return (
-    <Box minHeight='450px' sx={{ '& > :not(style)': { m: 1 } }} display='flex' flexDirection='column'>
-      <Typography>
-        Enter your average monthly heating consumption in gallons used for heating, and the fuel type used.
+    <Box display='flex' flexDirection='column'>
+      <Typography mx={2} mt={2}>
+        The calculation for heating fuel emissions uses the average number of gallons consumed heating a household per month,
+        and with this we can calculate the total amount of CO2, N2O, and CH4 emitted in a year.
+      </Typography>
+      <Typography mx={2}>
+        We convert the N2O and CH4 emissions to COe, i.e., the carbon dioxide equivalent.
       </Typography>
 
-      <FormControl>
+      <Typography mx={2} mt={4}>
+        Please insert your average monthly consumption of heating fuel in gallons, and the fuel type used.
+      </Typography>
+
+      <Box display='flex' flexDirection='column' mx={2} mt={1} sx={{ '& > :not(style)': { mb: 2 } }}>
         <TextField
           label='Heating Consumption'
           value={gallons}
           onChange={handleGallonsChange}
           inputProps={{ maxLength: 7 }}
+          InputLabelProps={{
+            style: { color: grey[500] }
+          }}
           InputProps={{
             endAdornment: <InputAdornment position="end">gallons</InputAdornment>,
           }}
         />
-      </FormControl>
 
-      <FormControl>
         <Select
           displayEmpty
           onChange={handleSelectedFuelOptionChange}
@@ -79,7 +91,7 @@ const HeatingForm = ({ parameters, setParameters, fuelOptions }) => {
             )
           }
         </Select>
-      </FormControl>
+      </Box>
     </Box>
   );
 };
