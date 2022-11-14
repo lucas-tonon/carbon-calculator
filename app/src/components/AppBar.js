@@ -27,9 +27,9 @@ const AppBar = ({ parameters }) => {
         <Toolbar>
           <Typography variant='h5' component='div' sx={{ flexGrow: 1 }}>Carbon Footprint Calculator</Typography>
 
-          <Box display='flex' flexDirection='column'>
+          <Box display='flex' flexDirection='column' height='10%'>
             <Typography variant='subtitle1' sx={{ fontWeight: 600 }}>Estimated Total Emissions</Typography>
-            <Typography variant='subtitle1' align='right'>{totalEmissions} kg of CO2</Typography>
+            <Typography variant='subtitle1' align='right'>{totalEmissions} kg of CO2 per year</Typography>
           </Box>
         </Toolbar>
       </MUIAppBar>
