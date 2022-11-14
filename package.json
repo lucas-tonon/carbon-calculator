@@ -8,7 +8,7 @@
     "start:client": "npm start --prefix app",
     "start:server": "node server/index.js",
     "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
-    "test:server": "mocha 'server/**/test/**/*.js' --recursive"
+    "test:server": "mocha 'server/**/test/**/*.js' --recursive --exit"
   },
   "keywords": [],
   "author": "",
