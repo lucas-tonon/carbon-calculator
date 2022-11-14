@@ -53,7 +53,7 @@ const HeatingForm = ({ parameters, setParameters, fuelOptions }) => {
     <Box display='flex' flexDirection='column'>
       <Typography mx={2} mt={2}>
         The calculation for heating fuel emissions uses the average number of gallons consumed heating a household per month,
-        and with this we can calculate the total amount of CO2, N2O, and CH4 emitted in a year.
+        using it we can calculate the total amount of CO2, N2O, and CH4 emitted in a year.
       </Typography>
       <Typography mx={2}>
         We convert the N2O and CH4 emissions to COe, i.e., the carbon dioxide equivalent.
