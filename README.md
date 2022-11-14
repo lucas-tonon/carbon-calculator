@@ -87,6 +87,8 @@ Having time to do so, it would be interesting to use the validation errors comin
 
 Another interesting change would possibly be to use Redux/ContextAPI instead of a simple global state. I used a global state for the sake of simplicity, but for an application that could grow with time and have many more categories and such it would be interesting to have a better state tree to keep things more easily manageable.
 
+Adding loading feature would be interesting as well. I avoided doing it right now mostly due to time management and given the simplicity of the APIs I didn't notice any urgent needs for loading, but given a more real-world scenario it would be a must to have loading features/behaviors to make sure the screen has everything it needs and the users have feedback for their actions.
+
 ## References
 
 https://driving-tests.org/beginner-drivers/types-and-grades-of-fuel/
